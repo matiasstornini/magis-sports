@@ -1,0 +1,17 @@
+---
+import Boton from './buttons-group.astro'; // Asegúrate de que la ruta sea correcta
+
+export let switchs;
+export let links;
+{console.log(links)}
+---
+
+{switchs !== 0 && links[0] !== "null" && (
+  <Boton link={links[0]} />
+)}
+{switchs !== 0 && links[1] !== "null" && (
+  <Boton link={links[1]} />
+)}
+{switchs !== 0 && links[2] !== "null" && (
+  <Boton link={links[2]} />
+)}

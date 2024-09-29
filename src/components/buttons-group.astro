@@ -1,0 +1,8 @@
+---
+// buttons-group.astro
+const { link } = Astro.props;
+const { text } = Astro.props;
+import './styles.css'; // Asegúrate de que la ruta sea correcta
+---
+
+<a href={link} class="button" draggable="false">{text}</a>
