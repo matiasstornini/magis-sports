@@ -1,13 +1,11 @@
 ---
 // Importaciones de componentes
-
 import Layout from '../layouts/Layout.astro';
 import Buttons from "../components/buttons-group.astro";
 
 // Lógica del componente
 let usuarios = [];
 let isLoading = true;
-let destacado = [0,1];
 
 async function fetchUsers() {
   try {
@@ -23,38 +21,38 @@ async function fetchUsers() {
 
       const parsedData = jsonData.table.rows;
       usuarios = parsedData.map((row) => {
-          const number = row.c[0].v;
-          const match = row.c[1].v;
-          const competition = row.c[2].v;
-          const statics = row.c[3].v;
-          const switchs = row.c[4].v;
-          const link = row.c[5].v;
-          const link2 = row.c[6].v;
-          const link3 = row.c[7].v;
-          const link4 = row.c[8].v;
-          const message = row.c[11]?.v || ""; // Asigna un valor predeterminado si es undefined
-          const url13 = row.c[13]?.v || ""; // Asigna un valor predeterminado si es undefined
-          const nameButton = row.c[13]?.v || ""; // Asigna un valor predeterminado si es undefined
+        const number = row.c[0].v;
+        const match = row.c[1].v;
+        const competition = row.c[2].v;
+        const statics = row.c[3].v;
+        const switchs = row.c[4].v;
+        const link = row.c[5].v;
+        const link2 = row.c[6].v;
+        const link3 = row.c[7].v;
+        const link4 = row.c[8].v;
+        const message = row.c[11]?.v || ""; 
+        const url13 = row.c[13]?.v || ""; 
+        const nameButton = row.c[13]?.v || ""; 
 
-          // Convertir timestamp a HH:MM
-          const date = new Date(row.c[0].v * 1000);
-          const hours = "0" + date.getHours();
-          const minutes = "0" + date.getMinutes();
-          const formattedTime = hours.substr(-2) + ":" + minutes.substr(-2);
+        // Convertir timestamp a HH:MM
+        const date = new Date(row.c[0].v * 1000);
+        const hours = "0" + date.getHours();
+        const minutes = "0" + date.getMinutes();
+        const formattedTime = hours.substr(-2) + ":" + minutes.substr(-2);
 
-          return {
-            number,
-            match,
-            competition,
-            switchs,
-            links: [link, link2, link3],
-            formattedTime,
-            message,
-            statics,
-            url13,
-            nameButton,
-          };
-        });
+        return {
+          number,
+          match,
+          competition,
+          switchs,
+          links: [link, link2, link3],
+          formattedTime,
+          message,
+          statics,
+          url13,
+          nameButton,
+        };
+      });
 
       isLoading = false;
     } else {
@@ -65,20 +63,11 @@ async function fetchUsers() {
   }
 }
 
-// Ejecutar fetchUsers en el servidor
-await fetchUsers();
-
-// Función para formatear el tiempo
-function formatTime(timestamp) {
-  const date = new Date(timestamp * 1000);
-  const hours = "0" + date.getHours();
-  const minutes = "0" + date.getMinutes();
-  return hours.substr(-2) + ":" + minutes.substr(-2);
+// Ejecutar fetchUsers en el cliente
+if (typeof window !== 'undefined') {
+  fetchUsers();
 }
-
-// Obtener el tiempo actual
-const now = Math.floor(Date.now() / 1000);
----
+--- 
 
 <html lang="es">
 <head>
@@ -89,14 +78,12 @@ const now = Math.floor(Date.now() / 1000);
     <title>Mi App en Astro</title>
 </head>
 <body>
-		<h1><span class="text-gradient">Magis Sports</span></h1>
-    
-<Layout title="Mi App"></Layout>
+    <h1><span class="text-gradient">Magis Sports</span></h1>
+    <Layout title="Mi App"></Layout>
     <div class="container">
         <main>
             <div class="card w-full bg-neutral text-neutral-content">
-                <div class="card-body text-center">
-                </div>
+                <div class="card-body text-center"></div>
             </div>
             
             {isLoading ? (
@@ -107,71 +94,69 @@ const now = Math.floor(Date.now() / 1000);
                     </div>
                 </div>
             ) : (
-<div>
-    <div class="divider"></div>
-    <h2 class="card-title">Todos los eventos:</h2>
+                <div>
+                    <div class="divider"></div>
+                    <h2 class="card-title">Todos los eventos:</h2>
 
-    {usuarios.map((usuario, index) => (
-    <div>
-        <div class="card w-full bg-neutral text-neutral-content">
-            <div class="card-body text-left">
-                <h3 class="b-1">{usuario.competition}</h3>
-                <p class="text-xl b-1">
-                    {usuario.formattedTime}
-                    {usuario.match}
-                </p>
-                <div class="card-actions">
-                    {console.log("Links:", usuario.links)}
-                                            
-                    {usuario.switchs !== 0 && usuario.links[0] !== "null" && (
-                        <Buttons link={usuario.links[0]} text={"Abrir"} />
-                        )}                                            
-                        {usuario.switchs !== 0 && usuario.links[1] !== "null" && (
-                        <Buttons link={usuario.links[1]} text={"Abrir"} />
-                        )}                                            
-                        {usuario.switchs !== 0 && usuario.links[2] !== "null" && (
-                        <Buttons link={usuario.links[2]} text={"Abrir"}/>
-                        )}
-                        <Buttons link={usuario.statics} text={"Estadisticas"} />
+                    {usuarios.map((usuario, index) => (
+                        <div >
+                            <div class="card w-full bg-neutral text-neutral-content">
+                                <div class="card-body text-left">
+                                    <h3 class="b-1">{usuario.competition}</h3>
+                                    <p class="text-xl b-1">
+                                        {usuario.formattedTime}
+                                        {usuario.match}
+                                    </p>
+                                    <div class="card-actions">
+                                        {console.log("Links:", usuario.links)}
+                                        {usuario.switchs !== 0 && usuario.links[0] !== "null" && (
+                                            <Buttons link={usuario.links[0]} text={"Abrir"} />
+                                        )}                                            
 
+                                        {usuario.switchs !== 0 && usuario.links[1] !== "null" && (
+                                            <Buttons link={usuario.links[1]} text={"Abrir"} />
+                                        )}                                            
+
+                                        {usuario.switchs !== 0 && usuario.links[2] !== "null" && (
+                                            <Buttons link={usuario.links[2]} text={"Abrir"} />
+                                        )}
+                                        <Buttons link={usuario.statics} text={"Estadisticas"} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                        </div>
+                    ))}
                 </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-    </div>
-))}
-
-</div>
-
             )}
         </main>
     </div>
     
 </Layout>
-    <style>
-        main {
-          margin: auto;
-          padding: 1rem;
-          width: 800px;
-          max-width: calc(100% - 2rem);
-          color: white;
-          font-size: 20px;
-          line-height: 1.6;
-        }
-        h1 {
-		font-size: 4rem;
-		font-weight: 700;
-		line-height: 1;
-		text-align: center;
-		margin-bottom: 1em;
-	}
-	.text-gradient {
-		background-image: var(--accent-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
-	}
-      </style>
+<style>
+    main {
+      margin: auto;
+      padding: 1rem;
+      width: 800px;
+      max-width: calc(100% - 2rem);
+      color: white;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        margin-bottom: 1em;
+    }
+    .text-gradient {
+        background-image: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 400%;
+        background-position: 0%;
+    }
+</style>
 </body>
 </html>
