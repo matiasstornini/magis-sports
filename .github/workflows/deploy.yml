@@ -38,5 +38,5 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "matias-magis-sport-40"
-          entrypoint: "server/entry.mjs"
+          entrypoint: ""
           root: "dist"
